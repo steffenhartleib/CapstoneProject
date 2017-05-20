@@ -1,15 +1,14 @@
----
-title: "Capstone Report 1"
+        ---
+title: "Data Science Capstone Project: NLP"
 author: "Steffen Hartleib"
 date: "July 21, 2015"
 output: html_document
 ---
 
 ### overview
-This the first of two milestone report for the Coursera Data Science Capstone Project.    
-The project assignment is to create a application that takes a string of words from a user and predicts the next word.  
+This the first milestone report for the Coursera Data Science Capstone Project.    
+The project assignment is to create an application that takes a string of words from a user and predicts the next word.  
 This initial report explores the data and briefly describes the next steps in building the model.  
-To keep the report consise and suitable for non-data scientists I did decided not to show the R-code here.   It's available in Github:  
 
 
 ### the raw data
@@ -20,7 +19,7 @@ n_US.news.txt -- 196M
 en_US.blogs.txt -- 196M    
 en_US.twitter.txt -- 196M    
 
-These files are too large to process efficently, so I created smaller sample set.
+These files are too large to process efficently, so I created a smaller sample set.
 
 
 ###  creating the sample sets
@@ -31,7 +30,7 @@ For each file I drew a random sample of 1% of the lines:
 ## line counts and size of sample files
 
 ```{r,echo = FALSE, eval = TRUE, message = FALSE}
-setwd("/Users/steffenhartleib/Google_Drive/Capstone/corpus/text")
+setwd("/Users/steffenhartleib/Google Drive/Capstone/corpus/text")
 News<- length(readLines("NewsSample.txt"))
 Blogs <- length(readLines("BlogSample.txt"))
 Twitter<- length(readLines("TwitterSample.txt"))
@@ -85,7 +84,7 @@ require(ggplot2)
 options(scipen=999)
 setwd("/Users/steffenhartleib/Google_Drive/Capstone/corpus/clean/tokens")
 df.freq <- read.csv("words.csv",head = TRUE)
-````
+```
 
 ```{r,echo = FALSE, eval = TRUE, message = FALSE}
 wFreq = arrange(df.freq, desc(freq))%>%
