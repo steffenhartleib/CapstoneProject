@@ -1,36 +1,32 @@
-        ---
-title: "Data Science Capstone Project: NLP"
+---
+title: ''John Hopkins University Data Science Specialiazition Capstone Project: Milestone
+  Report 1'
 author: "Steffen Hartleib"
 date: "July 21, 2015"
-output: html_document
+output:
+  html_document: default
+  word_document: default
 ---
 
-### overview
-This the first milestone report for the Coursera Data Science Capstone Project.    
-The project assignment is to create an application that takes a string of words from a user and predicts the next word.  
+## Overview
+The project assignment is to create an app that takes a string of words from a user and predicts the next word.  
 This initial report explores the data and briefly describes the next steps in building the model.  
 
+## The raw data
 
-### the raw data
-
-There are three large sets of English language data:  
+The corpus is three large sets of English language data:  
 
 n_US.news.txt -- 196M    
 en_US.blogs.txt -- 196M    
 en_US.twitter.txt -- 196M    
 
-These files are too large to process efficently, so I created a smaller sample set.
+These files are too large to process efficently in an app, so for each one I drew a random sample of 1% of the lines:
 
 
-###  creating the sample sets
-
-For each file I drew a random sample of 1% of the lines:
-
-
-## line counts and size of sample files
+## Line counts and size of sample files
 
 ```{r,echo = FALSE, eval = TRUE, message = FALSE}
-setwd("/Users/steffenhartleib/Google Drive/Capstone/corpus/text")
+setwd("/Users/steffen/Google Drive/Courses/Capstone/corpus/text")
 News<- length(readLines("NewsSample.txt"))
 Blogs <- length(readLines("BlogSample.txt"))
 Twitter<- length(readLines("TwitterSample.txt"))
@@ -51,39 +47,39 @@ sampleFiles
 
 These sample files make up the corpora for the rest of the analysis.
 
-### cleaning the data
-removed punctuation      
-removed any non alphabetical charcters        
-kept dashes and apostrophes within words   
-added periods back to most frequent abreviations    
-converted all words to lower case      
-removed profanties  
+## Cleaning the data
 
-### tokinizing the data sets
+* removed punctuation      
+* removed any non alphabetical charcters        
+* kept dashes and apostrophes within words   
+* added periods back to most frequent abreviations    
+* converted all words to lower case      
+* removed profanties  
+
+## Tokinizing the data sets
 created frequency tables of:   
-single words    
-2 word phrases (bigrams)   
-3 word phrases(trigrams)    
+* single words    
+* 2-word phrases (bigrams)   
+* 3-word phrases(trigrams)    
  
 
-### single words
+## Single words
 
-The corpus of sample files includes:    
-1.3 Million instances made up of about 72k distinct words    
-The average frequency is 19    
-The the median frequency is 2    
-The data is highly skewed by a few highfrequency words such as "the", "and".    
-Since the assignemnt is to predict the next word, I did not remove these
-stop words. 
+* The corpus of sample files includes:    
+* 1.3 Million instances made up of about 72k distinct words    
+* The average frequency is 19    
+* The the median frequency is 2    
+* The data is highly skewed by a few highfrequency words such as "the", "and".    
+* Since the assignemnt is to predict the next word, I did not remove these stop words. 
 
-#### Here are the 25 most frequent words
+## Here are the 25 most frequent words
 
 ```{r,echo = FALSE, eval = TRUE, message = FALSE}
 require(dplyr)
 require(ggplot2)
 options(scipen=999)
-setwd("/Users/steffenhartleib/Google_Drive/Capstone/corpus/clean/tokens")
-df.freq <- read.csv("words.csv",head = TRUE)
+setwd("/Users/steffen/Google Drive/Courses/Capstone/data/nGramsSmall")
+df.freq <- read.csv("1GramsSmall.csv",head = TRUE)
 ```
 
 ```{r,echo = FALSE, eval = TRUE, message = FALSE}
@@ -102,7 +98,7 @@ w25 <- w25 + geom_bar(stat = 'identity') + coord_flip() + xlab("") +ggtitle("Top
 w25
 ```
 
-#### frequency distribution
+## Frequency distribution
 To make the chart more legible I zoomed in on frequencies between 1,000 and 10,000. Still the data remains highl skewed.
 
 ```{r,echo = FALSE, eval = TRUE, message = FALSE}
@@ -115,7 +111,7 @@ wf
 ```
 
 
-#### How many unique words does it take to cover 50% and 90% of the instances?  
+## How many unique words does it take to cover 50% and 90% of the instances?  
 Because the data is so heavily skewed towards high frequency words, it takes only 375 words to cover 50% of the instances. 10,000 words will get you to 90% coverage:
 ```{r, echo =FALSE, eval = TRUE, message = FALSE}
 wFreqUn <- mutate(wFreq, cumeTerms = rownames(wFreq))%>%
@@ -129,7 +125,7 @@ pWU50 <- pWU50 + geom_bar(stat = 'identity') + ggtitle("375 words cover 50% perc
         scale_x_continuous("Frequency", limits = c(0, 1), breaks = seq(0, 
     1, .1)) + scale_y_continuous("Number of unique words", limits = c(0, 75000), breaks = seq(0, 75000, 5000)) + xlim(0,0.5) + ylim(0,500)
 pWU50
-````
+```
 
 ```{r, echo =FALSE, eval = TRUE, message = FALSE}
 #90% of instances
@@ -141,24 +137,25 @@ pWU90 <- pWU90 + geom_bar(stat = 'identity') + ggtitle("10,000 words cover 90% p
 pWU90
 ```
 
-### two word phrases (biGrams)
+## Two word phrases (biGrams)
 
 ```{r, echo = FALSE, eval = TRUE, message = FALSE}
-setwd("/Users/steffenhartleib/Google_Drive/Capstone/corpus/clean/tokens")
-biGramFreq <- read.csv("biGrams.csv", header = TRUE)
+setwd("/Users/steffen/Google Drive/Courses/Capstone/data/nGramsSmall")
+biGramFreq <- read.csv("2GramsSmall.csv", header = TRUE)
 biGramFreq <- arrange(biGramFreq, desc(freq))%>%
         mutate(cumeFreqPerc = round(cumsum(freq)/sum(freq),2))%>%
         mutate(cumeFreq = cumsum(freq))%>%
         #filter(cumeFreqPerc <= .50)%>%
         arrange(desc(freq))
 #summary(biGramFreq)
+
 ```
 
 There are 1.6 million instances of 680k unique phrases  
 Then mean frequency is 2.4 and the median is 1  
 This means data is significantly less skewed than single words.
 
-#### Here are the 25 most frequent biGrams:
+## Here are the 25 most frequent biGrams:
 
 
 ```{r, echo =FALSE, eval = TRUE, message = FALSE}
@@ -175,7 +172,7 @@ bG25 <- bG25 + geom_bar(stat = 'identity') + coord_flip() + xlab("") + ylab("Fre
 bG25
 ```
 
-#### frequency distribution:
+## Frequency distribution:
 Again, to make the chart more legible, I zoomed in on frequencies over 1,000
 ```{r, echo =FALSE, eval = TRUE, message = FALSE}
 # biGram Frequencies
@@ -184,7 +181,7 @@ bf <- bf + geom_histogram(binwidth = 500)
 bf
 ```
 
-#### How many unique biGrams will cover 50% and 90% of the instances?
+## How many unique biGrams will cover 50% and 90% of the instances?
 Since the biGrams much less skewed than the single words it takes 50,000 unique bigrams to cover 50% of the instances, and a whopping 500,000 to cover 90% of the instances. (better wrap up the exploratory analysis and start working on the model...)
 ```{r, echo =FALSE, eval = TRUE, message = FALSE}
 # unique biGrams covering  x% of total instances
@@ -201,14 +198,14 @@ bG <- bG + geom_bar(stat = 'identity') +
 bG
 ```
 
-### three word phrases (triGrams)
+## Three word phrases (triGrams)
 There are 730k unique triGrams, and 1.20 million instances.    
 The mean frequency is 1.2 and the median of 1. So while the data is less skewed, it's also very narrowly distributed around the mean of one. In other words, most phrases appear only once.   
 
 ```{r, echo =FALSE, eval = TRUE, message = FALSE}
 # triGrams
-setwd("/Users/steffenhartleib/Google_Drive/Capstone/corpus/clean/tokens")
-triGramFreq <- read.csv("triGrams.csv", header = TRUE)
+setwd("/Users/steffen/Google Drive/Courses/Capstone/data/nGramsSmall")
+triGramFreq <- read.csv("3GramsSmall.csv", header = TRUE)
 triGramFreq = arrange(triGramFreq, desc(freq))%>%
         mutate(cumeFreqPerc = round(cumsum(freq)/sum(freq),2))%>%
         mutate(cumeFreq = cumsum(freq))  %>%
@@ -218,7 +215,7 @@ triGramFreq = arrange(triGramFreq, desc(freq))%>%
 ```{r, echo =FALSE, eval = FALSE, message = FALSE}
 summary(triGramFreq)
 ```
-#### here are the top 25 trigrams:
+## Here are the top 25 trigrams:
 ```{r, echo =FALSE, eval = TRUE, message = FALSE}
 # top 25 triGrams plot
 tG25 <- ggplot(triGramFreq[1:25,], aes(x = reorder(triGramFreq[1:25,]$terms, triGramFreq[1:25,]$freq), y = freq))
@@ -227,15 +224,16 @@ tG25 <- tG25 + geom_bar(stat = 'identity') + coord_flip() + xlab("") + ylab("Fre
 tG25
 ```
 
-#### frequency distribution
+## Frequency distribution of trigrams
 
 ```{r, echo =FALSE, eval = TRUE, message = FALSE}
 tf <- ggplot(triGramFreq, aes(freq))
 tf <- tf + geom_histogram(binwidth = 1) + xlim(0,20)
 tf
 ```
+
   
-#### how many unique triGrams will cover 50% and 90% of the instances?
+## How many unique triGrams will cover 50% and 90% of the instances?
 Once you cover 25% of the unique instances the relationship becomes linear. 
 This means we'll need to include roughly 50% unique triGrams to cover 50% of the instances, 75% of unique triGrams to cover 75% of instances etc. 
 
@@ -254,6 +252,7 @@ tG <- tG + geom_bar(stat = 'identity') +
 tG
 ```
 
+)
 
 
 
