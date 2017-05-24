@@ -9,8 +9,8 @@ Natural Language Processing (NPL) was not covered in this course, or in any of t
 Sink or swim. The way I like it. <br/>
 <br/>
 
-here is the preso: https://rstudio-pubs-static.s3.amazonaws.com/103949_cc113acda1d84ceb861bc88468e1d2ce.html#/
+Here is the presentation explaingin the algorithm: https://rstudio-pubs-static.s3.amazonaws.com/103949_cc113acda1d84ceb861bc88468e1d2ce.html#/
 
-here is the app: https://steffenhartleib.shinyapps.io/YoNeWo/
+Here is the app: https://steffenhartleib.shinyapps.io/YoNeWo/
 
  
