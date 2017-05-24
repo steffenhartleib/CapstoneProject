@@ -4,7 +4,7 @@ This was the 10th and final module of the Data Science Specialization offered th
 <br/>
 The assignment was to create an app that predicts the next word of a string entered by a user.<br/>
 <br/>
-NPL was not covered in the previous courses, so this was a challenging project. We had to read up on NLP AND develop the app within 7 weeks. <br/>
+Natural Language Processing (NPL) was not covered in this course, or in any of the previous one. So this was a challenging project. We had to read up on NLP AND develop the app within 7 weeks. <br/>
 <br/>
 Sink or swim. The way I like it.<br/k >
 <br/>
